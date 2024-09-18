@@ -11,11 +11,6 @@
 import { mapGetters } from "vuex";
 
 export default {
-  data() {
-    return {
-      curent: null,
-    };
-  },
   computed: {
     ...mapGetters(["currentMemberData"]),
   },

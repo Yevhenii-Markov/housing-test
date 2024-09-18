@@ -6,7 +6,7 @@
       @keydown.enter="fetchMembers"
       class="sidebar__input _default-text"
       type="text"
-      :placeholder="placeholder"
+      placeholder="Введите id или имя"
     />
     <h2 class="sidebar__title _second">Результаты</h2>
     <sidebar-result />
@@ -19,11 +19,6 @@ import SidebarResult from "@/components/SidebarResult.vue";
 
 export default {
   components: { SidebarResult },
-  data() {
-    return {
-      placeholder: "Введите id или имя",
-    };
-  },
   methods: {
     ...mapMutations(["setSearchVal"]),
     ...mapActions(["fetchMembers"]),
