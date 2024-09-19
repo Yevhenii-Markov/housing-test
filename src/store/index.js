@@ -66,7 +66,6 @@ export default createStore({
     updateSearchVal({ commit }, e) {
       commit("setSearchVal", e);
       commit("changeIsSearched", false);
-      commit("changeIsSearched", false);
       commit("clearData");
     },
   },
