@@ -2,8 +2,8 @@
   <aside class="sidebar">
     <h2 class="sidebar__title">Поиск сотрудников</h2>
     <input
-      @input="setSearchVal"
-      @keydown.enter="fetchMembers"
+      @input="updateSearchVal"
+      @keydown.enter="searchMembers"
       class="sidebar__input _default-text"
       type="text"
       placeholder="Введите id или имя"
@@ -14,14 +14,17 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import SidebarResult from "@/components/SidebarResult.vue";
 
 export default {
   components: { SidebarResult },
   methods: {
-    ...mapMutations(["setSearchVal"]),
-    ...mapActions(["fetchMembers"]),
+    ...mapActions(["fetchMembers", "updateSearchVal"]),
+    searchMembers() {
+      this.$router.push("/");
+      this.fetchMembers();
+    },
   },
 };
 </script>

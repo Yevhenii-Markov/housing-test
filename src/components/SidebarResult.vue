@@ -10,13 +10,18 @@
         <sidebar-card :member="member" />
       </RouterLink>
     </div>
-    <div class="_default-text" v-else-if="!isLoading && searchVal && !error">
-      ничего не найдено
-    </div>
-    <div class="_default-text" v-else-if="!isLoading && error">
+    <div class="_default-text" v-else-if="!isLoading && error && isSearched">
       ошибка: {{ error }}
     </div>
-    <div class="_default-text" v-else-if="!isLoading">начните поиск</div>
+    <div class="_default-text" v-else-if="!isLoading && !isSearched">
+      начните поиск
+    </div>
+    <div
+      class="_default-text"
+      v-else-if="!isLoading && searchVal && !error && isSearched"
+    >
+      ничего не найдено
+    </div>
     <div class="loader" v-else></div>
   </div>
 </template>
@@ -31,7 +36,7 @@ export default {
     ...mapMutations(["setCurrentMemberData"]),
   },
   computed: {
-    ...mapGetters(["members", "searchVal", "isLoading", "error"]),
+    ...mapGetters(["members", "searchVal", "isLoading", "error", "isSearched"]),
   },
   watch: {
     "$route.params.userId"(userId) {

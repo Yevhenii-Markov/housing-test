@@ -1,11 +1,11 @@
 import { createStore } from "vuex";
-import router from "../router";
 
 export default createStore({
   state: {
     members: null,
     searchVal: null,
     isLoading: false,
+    isSearched: false,
     error: null,
     currentMemberData: null,
   },
@@ -14,11 +14,12 @@ export default createStore({
     searchVal: (state) => state.searchVal,
     currentMemberData: (state) => state.currentMemberData,
     isLoading: (state) => state.isLoading,
+    isSearched: (state) => state.isSearched,
     error: (state) => state.error,
     url(state) {
-      if (state.searchVal) {
+      const queryArr = state.searchVal?.match(/\w+|\d+/g) || [];
+      if (queryArr.length > 0) {
         let url = "https://jsonplaceholder.typicode.com/users?";
-        const queryArr = state.searchVal.match(/\w+|\d+/g) || [];
         const uniqueQueryArr = [...new Set(queryArr)];
         uniqueQueryArr?.forEach((request, i, arr) => {
           const key = isNaN(request) ? "username" : "id";
@@ -26,12 +27,14 @@ export default createStore({
         });
         return url;
       }
+      return null;
     },
   },
   mutations: {
     setMembers: (state, members) => (state.members = [members].flat()),
-    setSearchVal: (state, e) => (state.searchVal = e.target.value),
+    setSearchVal: (state, e) => (state.searchVal = e.target.value.trim()),
     changeIsLoading: (state, val) => (state.isLoading = val),
+    changeIsSearched: (state, val) => (state.isSearched = val),
     setError: (state, val) => (state.error = val),
     setCurrentMemberData(state, val) {
       state.currentMemberData = state.members?.find(
@@ -46,18 +49,25 @@ export default createStore({
   },
   actions: {
     async fetchMembers({ commit, getters }) {
-      commit("clearData");
-      commit("changeIsLoading", true);
-      await router.push("/");
-      try {
-        const response = await fetch(getters.url);
-        const members = await response.json();
-        commit("setMembers", members);
-      } catch (error) {
-        commit("setError", error);
-      } finally {
-        commit("changeIsLoading", false);
+      if (getters.url) {
+        commit("changeIsLoading", true);
+        try {
+          const response = await fetch(getters.url);
+          const members = await response.json();
+          commit("setMembers", members);
+        } catch (error) {
+          commit("setError", error);
+        } finally {
+          commit("changeIsLoading", false);
+          commit("changeIsSearched", true);
+        }
       }
+    },
+    updateSearchVal({ commit }, e) {
+      commit("setSearchVal", e);
+      commit("changeIsSearched", false);
+      commit("changeIsSearched", false);
+      commit("clearData");
     },
   },
 });
