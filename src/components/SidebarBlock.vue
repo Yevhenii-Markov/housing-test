@@ -1,14 +1,10 @@
 <template>
   <aside class="sidebar">
     <h2 class="sidebar__title">Поиск сотрудников</h2>
-    <input
-      @input="updateSearchVal"
-      @keydown.enter="searchMembers"
-      class="sidebar__input _default-text"
-      type="text"
-      placeholder="Введите id или имя"
-    />
-    <h2 class="sidebar__title _second">Результаты</h2>
+    <form @submit.prevent="searchMembers">
+      <input-default placeholder="Введите id или имя" v-model.trim="inputVal" />
+    </form>
+    <h2 class="sidebar__title">Результаты</h2>
     <sidebar-result />
   </aside>
 </template>
@@ -16,14 +12,25 @@
 <script>
 import { mapActions } from "vuex";
 import SidebarResult from "@/components/SidebarResult.vue";
+import InputDefault from "@/components/InputDefault.vue";
 
 export default {
-  components: { SidebarResult },
+  components: { SidebarResult, InputDefault },
+  data() {
+    return {
+      inputVal: "",
+    };
+  },
   methods: {
     ...mapActions(["fetchMembers", "updateSearchVal"]),
     searchMembers() {
       this.$router.push("/");
       this.fetchMembers();
+    },
+  },
+  watch: {
+    inputVal(val) {
+      this.updateSearchVal(val);
     },
   },
 };
@@ -45,17 +52,9 @@ export default {
     line-height: 22.4px;
     color: var(--base-color);
 
-    &._second {
+    &:not(:first-child) {
       margin: 29px 0 18px;
     }
-  }
-
-  &__input {
-    padding: 16px 14px;
-    border-radius: 8px;
-    background: #fff;
-    border: 1.5px solid #e9ecef;
-    margin-top: 14px;
   }
 }
 </style>

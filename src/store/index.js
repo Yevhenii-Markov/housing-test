@@ -32,7 +32,7 @@ export default createStore({
   },
   mutations: {
     setMembers: (state, members) => (state.members = [members].flat()),
-    setSearchVal: (state, e) => (state.searchVal = e.target.value.trim()),
+    setSearchVal: (state, val) => (state.searchVal = val),
     changeIsLoading: (state, val) => (state.isLoading = val),
     changeIsSearched: (state, val) => (state.isSearched = val),
     setError: (state, val) => (state.error = val),
@@ -63,8 +63,8 @@ export default createStore({
         }
       }
     },
-    updateSearchVal({ commit }, e) {
-      commit("setSearchVal", e);
+    updateSearchVal({ commit }, val) {
+      commit("setSearchVal", val);
       commit("changeIsSearched", false);
       commit("clearData");
     },
